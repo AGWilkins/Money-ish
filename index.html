@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f0e6" />
+  <title>Money-ish</title>
+  <meta name="description" content="Money is serious. You don't have to be. Tiny things to make you slightly better with money." />
+  <style>
+    :root{
+      --paper:#f4f0e6;
+      --ink:#161616;
+      --green:#2f6b4f;
+      --green2:#d8e5d8;
+      --line:#cfc7b8;
+      --muted:#726d64;
+      --card:#fbf8f1;
+      --shadow:0 16px 40px rgba(0,0,0,.08);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        linear-gradient(rgba(0,0,0,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.018) 1px, transparent 1px),
+        var(--paper);
+      background-size:28px 28px;
+      min-height:100vh;
+    }
+
+    button{font:inherit}
+
+    .wrap{
+      width:min(920px, calc(100% - 28px));
+      margin:0 auto;
+      padding:34px 0 42px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:52px;
+    }
+
+    .mini-logo{
+      font-weight:900;
+      letter-spacing:-.03em;
+      font-size:18px;
+    }
+
+    .top-link{
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      padding:8px 0;
+      cursor:pointer;
+      text-decoration:underline;
+      text-underline-offset:4px;
+    }
+
+    .hero{
+      text-align:center;
+      padding:0 8px;
+      margin:0 auto 34px;
+      max-width:760px;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(56px, 12vw, 110px);
+      line-height:.86;
+      letter-spacing:-.075em;
+      font-weight:950;
+    }
+
+    .hyphen{color:var(--green)}
+
+    .tagline{
+      margin:24px 0 6px;
+      font-size:clamp(24px, 5.2vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.045em;
+      font-weight:850;
+    }
+
+    .tagline em{
+      font-style:normal;
+      color:var(--green);
+    }
+
+    .sub{
+      margin:16px auto 0;
+      max-width:620px;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.5;
+    }
+
+    .big-button{
+      width:min(620px, 100%);
+      display:block;
+      margin:34px auto 16px;
+      border:2px solid var(--ink);
+      border-radius:999px;
+      padding:21px 26px 22px;
+      font-weight:950;
+      letter-spacing:-.025em;
+      font-size:clamp(21px, 4.8vw, 30px);
+      color:white;
+      background:var(--green);
+      box-shadow:6px 7px 0 var(--ink);
+      cursor:pointer;
+      transform:translate(0,0);
+      transition:.12s ease;
+    }
+
+    .big-button:active{
+      transform:translate(4px,5px);
+      box-shadow:2px 2px 0 var(--ink);
+    }
+
+    .modes{
+      margin:22px auto 0;
+      max-width:670px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+    }
+
+    .mode{
+      background:transparent;
+      border:1.5px solid var(--ink);
+      border-radius:999px;
+      padding:11px 8px;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.05em;
+      cursor:pointer;
+    }
+
+    .mode:hover,.mode:focus-visible{
+      background:var(--green2);
+    }
+
+    .stage{
+      margin:42px auto 0;
+      max-width:720px;
+      min-height:0;
+    }
+
+    .card{
+      position:relative;
+      display:none;
+      background:var(--card);
+      border:2px solid var(--ink);
+      border-radius:var(--radius);
+      padding:26px 24px 22px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card.show{display:block; animation:pop .24s ease}
+    @keyframes pop{
+      from{transform:translateY(8px) scale(.985); opacity:.2}
+      to{transform:none; opacity:1}
+    }
+
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:0 auto auto 0;
+      width:100%;
+      height:10px;
+      background:var(--green);
+    }
+
+    .eyebrow{
+      margin-top:8px;
+      font-size:12px;
+      letter-spacing:.12em;
+      font-weight:950;
+      color:var(--green);
+    }
+
+    .prompt-title{
+      margin:12px 0 14px;
+      font-size:clamp(31px, 8vw, 52px);
+      line-height:.98;
+      letter-spacing:-.055em;
+      font-weight:950;
+      max-width:620px;
+    }
+
+    .prompt-body{
+      margin:0;
+      font-size:clamp(18px,4.5vw,24px);
+      line-height:1.35;
+      max-width:620px;
+    }
+
+    .prompt-body strong{font-weight:900}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:28px;
+    }
+
+    .action{
+      border:1.5px solid var(--ink);
+      border-radius:18px;
+      padding:14px 14px;
+      font-weight:900;
+      cursor:pointer;
+      background:white;
+    }
+
+    .action.primary{
+      background:var(--ink);
+      color:white;
+    }
+
+    .tiny{
+      text-align:center;
+      margin:22px auto 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .progress{
+      margin:18px auto 0;
+      max-width:720px;
+      display:none;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+
+    .progress.show{display:block}
+
+    .footer{
+      margin:54px auto 0;
+      max-width:720px;
+      border-top:1px solid var(--line);
+      padding-top:24px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .footer strong{color:var(--ink)}
+    .footer a, .footer button{
+      color:inherit;
+      background:none;
+      border:0;
+      padding:0;
+      text-decoration:underline;
+      text-underline-offset:3px;
+      cursor:pointer;
+    }
+
+    dialog{
+      width:min(640px, calc(100% - 26px));
+      border:2px solid var(--ink);
+      border-radius:24px;
+      padding:0;
+      background:var(--card);
+      box-shadow:0 30px 90px rgba(0,0,0,.25);
+    }
+
+    dialog::backdrop{background:rgba(0,0,0,.45)}
+
+    .modal{
+      padding:26px;
+    }
+
+    .modal h2{
+      margin:0 0 14px;
+      font-size:36px;
+      letter-spacing:-.04em;
+    }
+
+    .modal p{
+      font-size:17px;
+      line-height:1.5;
+      color:#3f3b35;
+    }
+
+    .close{
+      width:100%;
+      margin-top:12px;
+      border:1.5px solid var(--ink);
+      border-radius:16px;
+      padding:13px;
+      background:var(--ink);
+      color:white;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:8px;
+      padding:7px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      background:rgba(255,255,255,.5);
+    }
+
+
+    .reflection{
+      display:none;
+      margin-top:18px;
+      background:var(--green2);
+      border:2px solid var(--ink);
+      border-radius:var(--radius);
+      padding:25px 22px 22px;
+      box-shadow:var(--shadow);
+    }
+    .reflection.show{display:block; animation:pop .24s ease}
+    .reflection-kicker{
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:.12em;
+      color:var(--green);
+    }
+    .reflection h2{
+      margin:10px 0 8px;
+      font-size:clamp(28px,7vw,44px);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+    .reflection p{
+      margin:0 0 14px;
+      font-size:21px;
+      font-weight:800;
+    }
+    .reflection textarea{
+      width:100%;
+      min-height:110px;
+      resize:vertical;
+      border:1.5px solid var(--ink);
+      border-radius:16px;
+      padding:14px;
+      background:var(--card);
+      color:var(--ink);
+      font:inherit;
+      font-size:16px;
+      outline:none;
+    }
+    .reflection-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .reflection-note{
+      margin-top:13px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    @media (max-width:600px){
+      .wrap{padding-top:20px}
+      .topbar{margin-bottom:40px}
+      .modes{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .card{padding:24px 19px 19px}
+      .actions,.reflection-actions{grid-template-columns:1fr}
+      .big-button{box-shadow:5px 6px 0 var(--ink)}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <div class="mini-logo">money<span class="hyphen">-</span>ish</div>
+      <button class="top-link" id="aboutBtn">Where did this come from?</button>
+    </div>
+
+    <section class="hero">
+      <h1>MONEY<span class="hyphen">-</span>ISH</h1>
+      <div class="tagline">Money is serious.<br><em>You don’t have to be.</em></div>
+      <p class="sub">Tiny things to make you slightly better with money. No spreadsheets. No shame. No linking your bank account.</p>
+
+      <button class="big-button" id="randomBtn">GIVE ME SOMETHING 💸</button>
+
+      <div class="modes" aria-label="Choose a Money-ish mode">
+        <button class="mode" data-mode="notice">NOTICE</button>
+        <button class="mode" data-mode="do">DO</button>
+        <button class="mode" data-mode="think">THINK</button>
+        <button class="mode" data-mode="dare">DARE</button>
+      </div>
+    </section>
+
+    <section class="stage" aria-live="polite">
+      <article class="card" id="card">
+        <div class="eyebrow" id="eyebrow"></div>
+        <h2 class="prompt-title" id="promptTitle"></h2>
+        <p class="prompt-body" id="promptBody"></p>
+        <div class="actions">
+          <button class="action primary" id="doneBtn">DONE-ISH ✓</button>
+          <button class="action" id="anotherBtn">ANOTHER ONE →</button>
+        </div>
+      </article>
+
+      <div class="progress" id="progress"></div>
+
+    <section class="reflection" id="reflection">
+      <div class="reflection-kicker">A MOMENT, PLEASE.</div>
+      <h2>YOU’VE BEEN MONEY-ISH FOR A WHILE.</h2>
+      <p>Notice anything?</p>
+      <textarea id="reflectionText" maxlength="500" placeholder="Something I noticed…"></textarea>
+      <div class="reflection-actions">
+        <button class="action primary" id="saveReflection">KEEP THAT ✓</button>
+        <button class="action" id="skipReflection">NOTHING YET →</button>
+      </div>
+      <div class="reflection-note">No score. No judgement. Just notice.</div>
+    </section>
+    </section>
+
+    <p class="tiny">No budgets. No bank connection. No judgement. Definitely not financial advice.</p>
+
+    <footer class="footer">
+      <strong>Spend less? Maybe. Spend better? Probably. Notice more? Definitely.</strong><br><br>
+      A small idea from Clarity Cycle.<br>
+      <button id="resetBtn">Reset my seen prompts</button>
+      <div class="status" id="status">0 seen · 0 done-ish</div>
+    </footer>
+  </main>
+
+  <dialog id="aboutDialog">
+    <div class="modal">
+      <h2>Where did this come from?</h2>
+      <p>Money-ish grew out of a simple idea from Clarity Cycle: before trying to change a behaviour, notice it properly.</p>
+      <p>Most money apps want access to your bank account. Money-ish wants access to your attention.</p>
+      <p>There are no scores, streaks, guilt trips or “financial health” percentages here. Just small prompts that make you look at spending, value, habits and assumptions from a slightly different angle.</p>
+      <p>Sometimes you may spend less. Sometimes you may spend more. The point is that you noticed.</p>
+      <button class="close" id="closeAbout">Fair enough. Carry on.</button>
+    </div>
+  </dialog>
+
+<script>
+const prompts = [
+  {id:1, mode:"notice", title:"SUBSCRIPTION SAFARI", body:"Find one recurring payment you haven’t thought about for six months. Don’t cancel it yet. Just decide whether you’d buy it again <strong>today</strong>."},
+  {id:2, mode:"notice", title:"£10 DISAPPEARING ACT", body:"Where did your last tenner actually go? Not roughly. Actually."},
+  {id:3, mode:"notice", title:"CAUGHT YOU", body:"The next time you’re about to buy something online, stop. What happened in the <strong>60 seconds before</strong> you decided you wanted it?"},
+  {id:4, mode:"notice", title:"MONEY AUTOPILOT", body:"Find one financial behaviour you’ve never consciously decided to have."},
+  {id:5, mode:"notice", title:"THE CUPBOARD AUDIT", body:"Find something you bought and never use. Admire your former optimism."},
+  {id:6, mode:"notice", title:"SMALL LEAK", body:"Spot one tiny purchase you barely notice because it feels too small to matter."},
+  {id:7, mode:"notice", title:"EXPENSIVE / VALUABLE", body:"Think of something expensive that was absolutely worth it. That’s useful data."},
+  {id:8, mode:"notice", title:"CHEAP / USELESS", body:"Now find something cheap that wasn’t worth it at all. Price and value are not the same thing."},
+  {id:9, mode:"notice", title:"WHO ORDERED THIS?", body:"Look at your last five non-essential purchases. Which one feels least like something the current you would choose?"},
+  {id:10, mode:"notice", title:"THE INVISIBLE BILL", body:"What do you pay for that quietly makes life easier every month? Notice value too, not just waste."},
+
+  {id:11, mode:"do", title:"THE 24-HOUR TEST", body:"Something you want? Excellent. Don’t buy it until tomorrow. If you still want it, crack on."},
+  {id:12, mode:"do", title:"THE £0 DAY", body:"Spend nothing unnecessary today. Not because you’re poor. Because you can."},
+  {id:13, mode:"do", title:"CASH IS WEIRD", body:"Take £20 out in cash and use only that for casual spending today. Notice how different it feels."},
+  {id:14, mode:"do", title:"DELETE ONE", body:"Remove one saved shopping item, wishlist item or basket item you’ve stopped caring about."},
+  {id:15, mode:"do", title:"PAY YOURSELF FIRST-ISH", body:"Move a small amount of money somewhere you’re less likely to casually spend it. Even £5 counts."},
+  {id:16, mode:"do", title:"USE THE GOOD THING", body:"Use something today that you once ‘saved for best’. You already paid for it."},
+  {id:17, mode:"do", title:"MAKE IT LAST", body:"Before replacing something, give it one proper attempt at repair, cleaning or resurrection."},
+  {id:18, mode:"do", title:"BUY NOTHING BETTER", body:"Before buying something new, see if you already own something that solves 80% of the problem."},
+  {id:19, mode:"do", title:"THE LITTLE TRANSFER", body:"Move the cost of one skipped impulse purchase into savings. Tiny victory. Slightly smug."},
+  {id:20, mode:"do", title:"ONE IN, ONE OUT", body:"Buying a new version of something you already own? Decide what the old one is doing first."},
+
+  {id:21, mode:"think", title:"RICH-ISH", body:"Name three things you already have that you’d immediately replace if they disappeared. That’s probably value."},
+  {id:22, mode:"think", title:"THE BILLIONAIRE TEST", body:"If you had £100 million, would you still buy this particular thing? Interesting either way."},
+  {id:23, mode:"think", title:"WHAT’S ENOUGH?", body:"Pick one category — clothes, tech, eating out, holidays. What does ‘enough’ actually look like for you?"},
+  {id:24, mode:"think", title:"THE REAL PRICE", body:"What did one of your favourite purchases cost in money, time, maintenance and attention? Still worth it?"},
+  {id:25, mode:"think", title:"FUTURE YOU", body:"What purchase would make your life easier in six months rather than merely nicer for six minutes?"},
+  {id:26, mode:"think", title:"WHY DO I OWN THIS?", body:"Pick an object near you. Would you buy it again at the price you paid?"},
+  {id:27, mode:"think", title:"GOOD MONEY", body:"Think of the last thing you spent money on that made someone else’s day better."},
+  {id:28, mode:"think", title:"THE £100 QUESTION", body:"If someone handed you £100 today and said you must use it well, what would you do with it?"},
+  {id:29, mode:"think", title:"TIME OR MONEY?", body:"Name one thing you currently save money on but pay for with too much time."},
+  {id:30, mode:"think", title:"YOUR VERSION OF RICH", body:"Forget the number. What would being financially comfortable actually allow you to do more — or less — of?"},
+
+  {id:31, mode:"dare", title:"THE £20 TEST", body:"Take £20 in cash. Every time you reach for it, ask: <strong>Do I want this more than I want the £20?</strong>"},
+  {id:32, mode:"dare", title:"NO DEAL", body:"Walk into a shop you like and leave without buying anything. Observe the astonishing survival."},
+  {id:33, mode:"dare", title:"THE WAITING ROOM", body:"Put something you want in your basket. Leave it there for 72 hours. Let capitalism wonder where you went."},
+  {id:34, mode:"dare", title:"UNSUBSCRIBE", body:"Unsubscribe from one retailer’s marketing emails. They will cope."},
+  {id:35, mode:"dare", title:"SELL THE GHOST", body:"Find one thing you keep ‘because it might be worth something’. Check whether it actually is."},
+  {id:36, mode:"dare", title:"FINANCIAL EMERGENCY", body:"You have £6. Coffee and cake cost £6. You genuinely want coffee and cake. <strong>Buy the bloody coffee and cake.</strong> Money-ish is not here to make your life miserable."},
+  {id:37, mode:"dare", title:"THE ANTI-HAUL", body:"List three things you nearly bought recently but didn’t. Congratulations on your invisible possessions."},
+  {id:38, mode:"dare", title:"PRICE AMNESIA", body:"Guess what three everyday things cost before checking. Your internal price database may be hilariously out of date."},
+  {id:39, mode:"dare", title:"THE UPGRADE TRAP", body:"Pick something you own that has a newer version. Explain, out loud, what problem upgrading would actually solve."},
+  {id:40, mode:"dare", title:"BUY IT PROPERLY", body:"If you’ve wanted the same thing for months, researched it, can afford it and know you’ll use it — stop performing guilt. Buy it properly."},
+
+  {id:41, mode:"notice", title:"THE DELIVERY TAX", body:"Look at your last delivered meal or convenience order. How much of the price was food — and how much was <strong>couldn’t be bothered</strong>? No judgement. Useful information."},
+  {id:42, mode:"notice", title:"DEFAULT SETTING", body:"What do you routinely buy without checking the price anymore?"},
+  {id:43, mode:"notice", title:"THE £3 SHRUG", body:"Find a purchase small enough that you normally wouldn’t think about it. Think about it for ten seconds. That’s all."},
+  {id:44, mode:"notice", title:"GOOD EXPENSIVE", body:"What’s something you own that looked expensive when you bought it but now feels cheap because you use it constantly?"},
+  {id:45, mode:"notice", title:"BAD BARGAIN", body:"What bargain have you bought twice because the first cheap one wasn’t very good?"},
+  {id:46, mode:"notice", title:"MOOD MONEY", body:"Notice the next time your mood changes what you want to buy. Bored you and cheerful you may have different shopping lists."},
+  {id:47, mode:"notice", title:"FRICTIONLESS", body:"Which purchase has become so easy — one tap, one click, one swipe — that paying barely feels like paying?"},
+  {id:48, mode:"notice", title:"THE FORGOTTEN WIN", body:"Find one thing you stopped spending money on without really noticing. Apparently change can happen without a spreadsheet."},
+  {id:49, mode:"notice", title:"SOCIAL SPENDING", body:"Think of your last three social occasions. Which spending was genuinely part of the pleasure, and which was just along for the ride?"},
+  {id:50, mode:"notice", title:"THE MONEY STORY", body:"Catch yourself saying something like ‘I’m terrible with money’ or ‘I always waste money’. Is it actually true?"},
+
+  {id:51, mode:"do", title:"THE TEN-MINUTE CART", body:"Before checkout, leave the basket alone for ten minutes. Come back and delete anything that suddenly looks less exciting."},
+  {id:52, mode:"do", title:"SHOP YOUR HOUSE", body:"Need something? Spend two minutes looking for an existing solution before opening a shopping app."},
+  {id:53, mode:"do", title:"THE BORING FIVE", body:"Put £5 somewhere sensible. There. You’ve done some finance. Try not to let it go to your head."},
+  {id:54, mode:"do", title:"CANCEL NOTHING", body:"Open your subscriptions. Cancel nothing. Just mark the ones you’d happily renew today. Awareness first, scissors later."},
+  {id:55, mode:"do", title:"USE IT TWICE", body:"Pick something you complain you wasted money on. Use it twice this week before declaring the purchase dead."},
+  {id:56, mode:"do", title:"THE RECEIPT TEST", body:"Keep one receipt today. Tonight, look at it and circle the thing that gave you the most value. It may not be the expensive bit."},
+  {id:57, mode:"do", title:"WAIT FOR HUNGER", body:"Before buying food on impulse, wait until you can tell whether you’re actually hungry or merely standing near food."},
+  {id:58, mode:"do", title:"REMOVE THE TEMPTATION", body:"Delete one shopping app from your home screen. You can still buy things. You just have to mean it slightly more."},
+  {id:59, mode:"do", title:"ONE BETTER THING", body:"Instead of three mediocre versions, consider whether one good version would serve you better. Don’t buy it yet. Just compare."},
+  {id:60, mode:"do", title:"THE GENEROUS FIVER", body:"Spend a small amount on someone else today — deliberately. Notice whether that feels different from spending the same amount on yourself."},
+
+  {id:61, mode:"think", title:"WHAT ARE YOU BUYING?", body:"For something you want, finish this sentence: ‘I’m not really buying the thing. I’m buying the feeling of…’"},
+  {id:62, mode:"think", title:"THE £1,000 YOU", body:"If your income rose by £1,000 a month tomorrow, what would genuinely improve — and what would simply become more expensive?"},
+  {id:63, mode:"think", title:"ENOUGH ALREADY", body:"Name one area of your life where you already have enough. Possibly more than enough. Congratulations."},
+  {id:64, mode:"think", title:"MONEY WELL WASTED", body:"What have you spent money on that was objectively unnecessary and absolutely worth it? Keep that category."},
+  {id:65, mode:"think", title:"THE REGRET TEST", body:"Which would annoy future you more: buying this and barely using it, or not buying it at all?"},
+  {id:66, mode:"think", title:"CHEAP FOR WHOM?", body:"Think of something you call expensive. Expensive compared with what — your budget, an alternative, its usefulness, or just the number in your head?"},
+  {id:67, mode:"think", title:"THE HOUR PRICE", body:"How many hours of your time does this purchase represent? Does that make it look different?"},
+  {id:68, mode:"think", title:"STATUS CHECK", body:"If nobody else could ever see this purchase, would you still want it as much?"},
+  {id:69, mode:"think", title:"THE MEMORY BUDGET", body:"Which recent spending created a memory you still enjoy? That belongs in the accounts too."},
+  {id:70, mode:"think", title:"WHAT WOULD YOU KEEP?", body:"If you had to cut 20% of your discretionary spending, what would you protect first? That tells you what you value."},
+
+  {id:71, mode:"dare", title:"THE 30-DAY GHOST", body:"Find something you’ve wanted for at least 30 days. If you still want it, can afford it and will use it, allow yourself to consider buying it without guilt theatre."},
+  {id:72, mode:"dare", title:"CLOSE THE TAB", body:"Close every shopping tab currently open on your phone. If it matters, you’ll find it again."},
+  {id:73, mode:"dare", title:"THE POSH VERSION", body:"Pick something you buy cheaply and often. Price the genuinely excellent version. Sometimes cheap is expensive in instalments."},
+  {id:74, mode:"dare", title:"TELL THE TRUTH", body:"Name one thing you bought mainly because another person had one. Humans are social animals. Even in checkout queues."},
+  {id:75, mode:"dare", title:"NO SALE", body:"Find something currently ‘on sale’ that you weren’t planning to buy. Save 100% by heroically continuing not to own it."},
+  {id:76, mode:"dare", title:"THE FREE TRIAL TRIAL", body:"Find a free trial you’re considering. Before starting it, decide what would make it worth paying for. Future you has entered the chat."},
+  {id:77, mode:"dare", title:"THE £50 PAUSE", body:"For your next unplanned purchase over £50, say out loud: ‘I can afford it. I just haven’t decided if I want it.’ Then decide."},
+  {id:78, mode:"dare", title:"IGNORE THE ALGORITHM", body:"Don’t buy anything recommended to you by an algorithm today. Sorry, algorithm."},
+  {id:79, mode:"dare", title:"THE JOY AUDIT", body:"Find one thing you spend money on purely because it makes life more enjoyable. Defend it. Money-ish is listening."},
+  {id:80, mode:"dare", title:"DO ABSOLUTELY NOTHING", body:"See something you want? Don’t buy it. Don’t save it. Don’t research it. Just let the wanting exist for a minute. Wild."},
+
+  {id:81, mode:"notice", title:"THE FIRST NUMBER", body:"When you hear the price of something, what happens first — curiosity, resistance, excitement, calculation, or absolutely nothing?"},
+  {id:82, mode:"notice", title:"YOUR EXPENSIVE", body:"Notice the next time you say ‘that’s expensive’. Expensive compared with what?"},
+  {id:83, mode:"notice", title:"YOUR CHEAP", body:"Notice the next time ‘it’s only £…’ appears in your head. That little sentence does quite a lot of work."},
+  {id:84, mode:"notice", title:"CONTACTLESS AMNESIA", body:"After your next contactless payment, see if you can remember the exact amount ten minutes later."},
+  {id:85, mode:"notice", title:"THE JUSTIFICATION", body:"Catch the sentence you use to make a purchase feel reasonable. ‘I deserve it’, ‘I need one anyway’, ‘it’s on sale’… just notice the script."},
+  {id:86, mode:"notice", title:"MONEY WEATHER", body:"What mood are you in when you spend most freely? What mood makes you tighten up?"},
+  {id:87, mode:"notice", title:"THE AUDIENCE", body:"Notice one thing you own partly because of what it communicates to other people. No shame. Humans signal."},
+  {id:88, mode:"notice", title:"THE OLD RULE", body:"What money rule from childhood still lives in your head? ‘Waste not’, ‘money doesn’t grow on trees’, ‘buy the best’… whose voice is it?"},
+  {id:89, mode:"notice", title:"THE QUICK YES", body:"What kind of purchase gets an almost automatic yes from you?"},
+  {id:90, mode:"notice", title:"THE QUICK NO", body:"What kind of purchase gets an automatic no — even when you can afford it?"},
+  {id:91, mode:"notice", title:"VALUE AFTERWARDS", body:"Think of something you bought six months ago. Has its value to you gone up, down, or stayed roughly the same?"},
+  {id:92, mode:"notice", title:"THE UNUSED PREMIUM", body:"Where do you routinely pay extra for features, quantity or quality you don’t actually use?"},
+  {id:93, mode:"notice", title:"THE GOOD DEFAULT", body:"Find one automatic money habit that quietly works well for you. Autopilot isn’t always the villain."},
+  {id:94, mode:"notice", title:"THE MONEY FACE", body:"Notice your physical reaction when an unexpectedly large bill arrives. Shoulders? Jaw? Stomach? Before the story, there’s often a body."},
+  {id:95, mode:"notice", title:"THE COMPARISON", body:"When someone buys something expensive, what’s your first thought? Admiration, judgement, curiosity, envy, indifference? Interesting."},
+  {id:96, mode:"notice", title:"THE ROUND NUMBER", body:"Do £9.99 and £10 feel the same to you? They are doing their best not to."},
+  {id:97, mode:"notice", title:"FREE-ISH", body:"Notice something advertised as free. What does it actually ask for — time, attention, data, habit, future spending?"},
+  {id:98, mode:"notice", title:"THE RELIEF PURCHASE", body:"Think of something you bought mainly to make a problem disappear quickly. Was the relief part of the value?"},
+  {id:99, mode:"notice", title:"MONEY SILENCE", body:"What aspect of money do you almost never talk about — even with people close to you?"},
+  {id:100, mode:"notice", title:"THE SHADOW", body:"Pick one belief you have about money. For today, don’t ask whether it’s true. Ask where you first saw it."},
+
+  {id:101, mode:"think", title:"ENOUGH FOR TODAY", body:"If you couldn’t buy anything non-essential for the rest of today, what would you genuinely miss?"},
+  {id:102, mode:"think", title:"THE SAME LIFE", body:"If your income doubled but nobody else knew, what would you actually change?"},
+  {id:103, mode:"think", title:"THE SAME YOU", body:"If your income halved for a year, which parts of your identity would you worry about losing?"},
+  {id:104, mode:"think", title:"PRICELESS-ISH", body:"What gives you enormous value and costs almost nothing?"},
+  {id:105, mode:"think", title:"THE HIDDEN LUXURY", body:"What ordinary thing in your current life would have felt luxurious to you twenty years ago?"},
+  {id:106, mode:"think", title:"THE OTHER CURRENCY", body:"What are you currently rich in besides money — time, friends, skills, freedom, health, knowledge, something else?"},
+  {id:107, mode:"think", title:"THE COST OF CHEAP", body:"When has choosing the cheapest option cost you more in time, irritation or replacement?"},
+  {id:108, mode:"think", title:"THE COST OF POSH", body:"When have you paid more and discovered the expensive version wasn’t meaningfully better?"},
+  {id:109, mode:"think", title:"SECURITY-ISH", body:"What amount of accessible money would make you feel noticeably safer? Where did that number come from?"},
+  {id:110, mode:"think", title:"MORE", body:"Finish the sentence without editing yourself: ‘If I had more money, I would finally…’"},
+  {id:111, mode:"think", title:"LESS", body:"Finish this one too: ‘If I worried less about money, I would…’"},
+  {id:112, mode:"think", title:"THE TRADE", body:"What do you happily pay someone else to do because you’d rather keep the time?"},
+  {id:113, mode:"think", title:"THE REVERSE TRADE", body:"What do you still do yourself even though paying someone might be rational — because you enjoy it, value it, or simply prefer it?"},
+  {id:114, mode:"think", title:"MONEY = ?", body:"Without thinking too hard, complete this: ‘Money is…’ Your first answer may be more revealing than the clever one."},
+  {id:115, mode:"think", title:"RICH PEOPLE", body:"What assumption do you automatically make about people with much more money than you?"},
+  {id:116, mode:"think", title:"POOR PEOPLE", body:"What assumption do you automatically make about people with much less money than you?"},
+  {id:117, mode:"think", title:"THE PERFECT PURCHASE", body:"What’s one purchase you’ve never regretted? What made it different?"},
+  {id:118, mode:"think", title:"THE PERFECT NON-PURCHASE", body:"What are you very glad you never bought?"},
+  {id:119, mode:"think", title:"THE NUMBER", body:"Is there a number — salary, savings, house price, pension — that has acquired unusual importance in your head? Why that number?"},
+  {id:120, mode:"think", title:"TURN AROUND", body:"What money belief feels so obvious that you’ve never thought to examine it? There’s your wall of the cave."},
+
+  {id:121, mode:"do", title:"LOOK AT IT", body:"Open your bank balance. Don’t calculate, fix, celebrate or panic. Look at the number for ten seconds and close it."},
+  {id:122, mode:"do", title:"NAME THE PURCHASE", body:"Before your next non-essential purchase, say what you’re buying in plain language. Not ‘a little treat’. The actual thing."},
+  {id:123, mode:"do", title:"REMOVE ONE CLICK", body:"Log out of one shopping site. You haven’t banned yourself. You’ve added approximately seven seconds of consciousness."},
+  {id:124, mode:"do", title:"THE REAL TOTAL", body:"Before checkout, read the final total out loud. Delivery and add-ons have now been invited into reality."},
+  {id:125, mode:"do", title:"KEEP THE TENNER", body:"The next time you nearly spend £10 and decide not to, keep the £10 mentally visible. Not spending is still a decision."},
+  {id:126, mode:"do", title:"ASK WHY ONCE", body:"Before one purchase today, ask ‘why?’ once. Do not ask five times and turn it into therapy."},
+  {id:127, mode:"do", title:"USE THE LAST ONE", body:"Before replacing a consumable, use the last awkward little bit of the current one. Toothpaste archaeology counts."},
+  {id:128, mode:"do", title:"THE 60-SECOND BILL", body:"Pick one regular bill and look at it for exactly one minute. What are you actually paying for?"},
+  {id:129, mode:"do", title:"BUY TIME", body:"Spend a small amount today specifically to save yourself time. Then decide afterwards whether the trade was worth it."},
+  {id:130, mode:"do", title:"BUY JOY", body:"Spend a small amount today on something whose only job is enjoyment. Pay attention to whether it succeeds."},
+  {id:131, mode:"do", title:"DON’T OPTIMISE", body:"For one tiny purchase today, refuse to compare twelve alternatives. Choose, pay, continue living."},
+  {id:132, mode:"do", title:"THE SECOND LOOK", body:"Look at one thing you’re about to throw away and ask whether it has one more useful life in it. If not, bin it without guilt."},
+  {id:133, mode:"do", title:"MAKE THE INVISIBLE VISIBLE", body:"Write down every purchase you make today. No categories. No budget. Just a list."},
+  {id:134, mode:"do", title:"ONE CASH PURCHASE", body:"Pay cash for one thing you’d normally tap for. Notice whether handing over money feels different."},
+  {id:135, mode:"do", title:"ONE TAP PURCHASE", body:"If you normally obsess over small cash spending, deliberately tap once without analysing it. Consciousness isn’t the same as anxiety."},
+  {id:136, mode:"do", title:"THE THANK-YOU", body:"Pick one thing money paid for recently that genuinely helped you. Take five seconds to appreciate the exchange."},
+  {id:137, mode:"do", title:"CHECK THE CLAIM", body:"See ‘save £40’? Check what you would actually spend. A saving on something you weren’t buying is an imaginative number."},
+  {id:138, mode:"do", title:"THE EMPTY BASKET", body:"Empty one online basket completely. If you still want something later, it is allowed to return."},
+  {id:139, mode:"do", title:"PUT IT WHERE YOU SEE IT", body:"Move one forgotten thing you paid for into sight and use it this week."},
+  {id:140, mode:"do", title:"ONE DELIBERATE YES", body:"Say yes to one affordable thing you genuinely value today without immediately apologising to yourself for spending money."},
+
+  {id:141, mode:"dare", title:"THE AD TEST", body:"When an advert makes you want something today, don’t resist it. Study the wanting. What exactly did the advert switch on?"},
+  {id:142, mode:"dare", title:"THE JONES TEST", body:"Think of something you’d like partly because other people have it. Remove the other people. Do you still want it?"},
+  {id:143, mode:"dare", title:"FULL PRICE", body:"Find something on sale. Ask whether you’d want it at full price. If the answer is no, perhaps you want the discount."},
+  {id:144, mode:"dare", title:"THE LUXURY TEST", body:"Use your nicest version of something ordinary today. The good mug. The good coat. The absurdly expensive soap. You already own it."},
+  {id:145, mode:"dare", title:"THE £1 HOUR", body:"Spend an hour doing something enjoyable that costs £1 or less. This is not austerity. It’s data."},
+  {id:146, mode:"dare", title:"THE £100 HOUR", body:"Think of an hour you once spent £100+ enjoying. Was it ten times better than the cheap one? It doesn’t need to be."},
+  {id:147, mode:"dare", title:"DELETE THE DISCOUNT", body:"Ignore every discount code offered to you for one day. Buy what you intended to buy, or don’t."},
+  {id:148, mode:"dare", title:"SAY THE NUMBER", body:"Tell someone you trust the actual price of something you bought instead of ‘not too bad’ or ‘a bit pricey’. Notice the urge to soften it."},
+  {id:149, mode:"dare", title:"THE NO-GUILT DAY", body:"For one day, if you consciously choose to buy something and can afford it, don’t punish yourself afterwards. Decision made."},
+  {id:150, mode:"dare", title:"THE NO-PRIDE DAY", body:"For one day, if you consciously choose not to buy something, don’t congratulate yourself either. You merely chose."},
+  {id:151, mode:"dare", title:"UNFOLLOW THE SHOP", body:"Unfollow one brand or retailer you don’t remember choosing to invite into your attention."},
+  {id:152, mode:"dare", title:"FOLLOW THE MONEY", body:"Take one purchase and trace it backwards: what prompted it, where you were, who influenced it, what feeling preceded it?"},
+  {id:153, mode:"dare", title:"THE BORING ANSWER", body:"Ask yourself what you most need financially right now. Allow the answer to be boring."},
+  {id:154, mode:"dare", title:"THE FUN ANSWER", body:"Ask yourself what you most want to spend money on right now. Allow the answer to be ridiculous."},
+  {id:155, mode:"dare", title:"THE STATUS HOLIDAY", body:"For one purchase, choose the version nobody will be impressed by if it does the job you actually need."},
+  {id:156, mode:"dare", title:"THE REVERSE STATUS HOLIDAY", body:"For one thing you genuinely love, admit you enjoy the beautiful, premium or ridiculous version. Awareness includes vanity."},
+  {id:157, mode:"dare", title:"DON’T CALL IT A TREAT", body:"Buy a small pleasure if you want one. Just don’t call it a ‘treat’. See whether removing the moral language changes anything."},
+  {id:158, mode:"dare", title:"DON’T CALL IT WASTE", body:"Think of one purchase you regret. Replace ‘waste’ with ‘information’. What did it teach you?"},
+  {id:159, mode:"dare", title:"THE MONEY MIRROR", body:"Describe your money behaviour in three neutral words. Not good, bad, sensible or stupid. Just descriptive."},
+  {id:160, mode:"dare", title:"LEAVE THE CAVE", body:"Catch one money story today that you normally accept automatically. Turn around. Look at where it came from. Then decide whether you still want it."}
+];
+
+const card = document.getElementById("card");
+const eyebrow = document.getElementById("eyebrow");
+const promptTitle = document.getElementById("promptTitle");
+const promptBody = document.getElementById("promptBody");
+const progress = document.getElementById("progress");
+const randomBtn = document.getElementById("randomBtn");
+const anotherBtn = document.getElementById("anotherBtn");
+const doneBtn = document.getElementById("doneBtn");
+const status = document.getElementById("status");
+const dialog = document.getElementById("aboutDialog");
+
+let currentPrompt = null;
+let currentMode = null;
+
+const seen = new Set(JSON.parse(localStorage.getItem("moneyish_seen") || "[]"));
+const done = new Set(JSON.parse(localStorage.getItem("moneyish_done") || "[]"));
+
+function save(){
+  localStorage.setItem("moneyish_seen", JSON.stringify([...seen]));
+  localStorage.setItem("moneyish_done", JSON.stringify([...done]));
+  updateStatus();
+}
+
+function updateStatus(){
+  status.textContent = `${seen.size} seen · ${done.size} done-ish`;
+}
+
+function modeLabel(mode){
+  return ({
+    notice:"NOTICE SOMETHING",
+    do:"DO SOMETHING",
+    think:"THINK ABOUT SOMETHING",
+    dare:"DARE-ISH"
+  })[mode];
+}
+
+function pick(mode=null){
+  currentMode = mode;
+  let pool = prompts.filter(p => !mode || p.mode === mode);
+  let unseen = pool.filter(p => !seen.has(p.id));
+
+  if(unseen.length === 0){
+    unseen = pool;
+  }
+
+  let next;
+  if(currentPrompt && unseen.length > 1){
+    const filtered = unseen.filter(p => p.id !== currentPrompt.id);
+    next = filtered[Math.floor(Math.random()*filtered.length)];
+  } else {
+    next = unseen[Math.floor(Math.random()*unseen.length)];
+  }
+
+  showPrompt(next);
+}
+
+function showPrompt(p){
+  currentPrompt = p;
+  seen.add(p.id);
+  save();
+
+  eyebrow.textContent = modeLabel(p.mode);
+  promptTitle.textContent = p.title;
+  promptBody.innerHTML = p.body;
+  doneBtn.textContent = done.has(p.id) ? "DONE-ISH ✓" : "DONE-ISH ✓";
+  card.classList.add("show");
+  progress.classList.add("show");
+  progress.textContent = `${seen.size} of ${prompts.length} things noticed`;
+
+  setTimeout(() => card.scrollIntoView({behavior:"smooth", block:"center"}), 40);
+}
+
+randomBtn.addEventListener("click", () => pick(null));
+anotherBtn.addEventListener("click", () => pick(currentMode));
+
+document.querySelectorAll(".mode").forEach(btn => {
+  btn.addEventListener("click", () => pick(btn.dataset.mode));
+});
+
+doneBtn.addEventListener("click", () => {
+  if(!currentPrompt) return;
+  const wasNew = !done.has(currentPrompt.id);
+  done.add(currentPrompt.id);
+  save();
+  doneBtn.textContent = "DONE-ISH ✓";
+
+  if (wasNew && done.size > 0 && done.size % 10 === 0) {
+    setTimeout(showReflection, 220);
+  }
+
+  doneBtn.animate(
+    [{transform:"scale(1)"},{transform:"scale(.97)"},{transform:"scale(1)"}],
+    {duration:180}
+  );
+});
+
+document.getElementById("aboutBtn").addEventListener("click", () => dialog.showModal());
+document.getElementById("closeAbout").addEventListener("click", () => dialog.close());
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(confirm("Forget which prompts you’ve seen? Money-ish will pretend none of this ever happened.")){
+    seen.clear();
+    done.clear();
+    localStorage.removeItem("moneyish_seen");
+    localStorage.removeItem("moneyish_done");
+    localStorage.removeItem("moneyish_reflections");
+    currentPrompt = null;
+    card.classList.remove("show");
+    progress.classList.remove("show");
+    updateStatus();
+  }
+});
+
+
+const reflection = document.getElementById("reflection");
+const reflectionText = document.getElementById("reflectionText");
+
+function showReflection(){
+  reflectionText.value = "";
+  reflection.classList.add("show");
+  setTimeout(() => reflection.scrollIntoView({behavior:"smooth", block:"center"}), 40);
+}
+
+function closeReflection(){
+  reflection.classList.remove("show");
+}
+
+document.getElementById("saveReflection").addEventListener("click", () => {
+  const text = reflectionText.value.trim();
+  if(text){
+    const reflections = JSON.parse(localStorage.getItem("moneyish_reflections") || "[]");
+    reflections.push({text, at:new Date().toISOString(), doneCount:done.size});
+    localStorage.setItem("moneyish_reflections", JSON.stringify(reflections));
+  }
+  closeReflection();
+});
+
+document.getElementById("skipReflection").addEventListener("click", closeReflection);
+
+updateStatus();
+</script>
+</body>
+</html>
