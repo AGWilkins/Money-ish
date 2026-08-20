@@ -375,6 +375,46 @@
       text-align:center;
     }
 
+
+    .cycle-flourish{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      z-index:9999;
+      pointer-events:none;
+      background:rgba(244,240,230,.72);
+      backdrop-filter:blur(3px);
+    }
+    .cycle-flourish.show{
+      display:grid;
+      animation:flourishFade .78s ease forwards;
+    }
+    .cycle-badge{
+      border:2px solid var(--ink);
+      border-radius:999px;
+      background:var(--green);
+      color:#fff;
+      padding:18px 28px 20px;
+      font-weight:950;
+      font-size:clamp(24px,6vw,42px);
+      letter-spacing:-.035em;
+      box-shadow:6px 7px 0 var(--ink);
+      transform:scale(.86) rotate(-1deg);
+      animation:badgePop .7s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    @keyframes flourishFade{
+      0%{opacity:0}
+      12%{opacity:1}
+      72%{opacity:1}
+      100%{opacity:0}
+    }
+    @keyframes badgePop{
+      0%{transform:scale(.8) rotate(-2deg)}
+      35%{transform:scale(1.04) rotate(1deg)}
+      100%{transform:scale(1) rotate(0)}
+    }
+
     @media (max-width:600px){
       .wrap{padding-top:20px}
       .topbar{margin-bottom:40px}
@@ -444,6 +484,11 @@
       <div class="status" id="status">0 seen · 0 done-ish</div>
     </footer>
   </main>
+
+
+  <div class="cycle-flourish" id="cycleFlourish" aria-hidden="true">
+    <div class="cycle-badge">CLARITY CYCLED ✓</div>
+  </div>
 
   <dialog id="aboutDialog">
     <div class="modal">
@@ -641,6 +686,7 @@ const anotherBtn = document.getElementById("anotherBtn");
 const doneBtn = document.getElementById("doneBtn");
 const status = document.getElementById("status");
 const dialog = document.getElementById("aboutDialog");
+const cycleFlourish = document.getElementById("cycleFlourish");
 
 let currentPrompt = null;
 let currentMode = null;
@@ -715,16 +761,38 @@ doneBtn.addEventListener("click", () => {
   const wasNew = !done.has(currentPrompt.id);
   done.add(currentPrompt.id);
   save();
-  doneBtn.textContent = "DONE-ISH ✓";
 
-  if (wasNew && done.size > 0 && done.size % 10 === 0) {
-    setTimeout(showReflection, 220);
-  }
+  doneBtn.textContent = "CLARITY CYCLED ✓";
+  doneBtn.disabled = true;
+
+  cycleFlourish.classList.remove("show");
+  void cycleFlourish.offsetWidth;
+  cycleFlourish.classList.add("show");
 
   doneBtn.animate(
     [{transform:"scale(1)"},{transform:"scale(.97)"},{transform:"scale(1)"}],
     {duration:180}
   );
+
+  const shouldReflect = wasNew && done.size > 0 && done.size % 10 === 0;
+
+  setTimeout(() => {
+    window.scrollTo({top:0, behavior:"smooth"});
+  }, 420);
+
+  setTimeout(() => {
+    card.classList.remove("show");
+    progress.classList.remove("show");
+    currentPrompt = null;
+    currentMode = null;
+    doneBtn.textContent = "DONE-ISH ✓";
+    doneBtn.disabled = false;
+    cycleFlourish.classList.remove("show");
+
+    if (shouldReflect) {
+      setTimeout(showReflection, 300);
+    }
+  }, 980);
 });
 
 document.getElementById("aboutBtn").addEventListener("click", () => dialog.showModal());
