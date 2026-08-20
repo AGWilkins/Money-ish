@@ -376,6 +376,28 @@
     }
 
 
+
+    .install-nudge{
+      position:fixed; inset:0; z-index:10020; display:none; place-items:center;
+      background:rgba(17,17,17,.34); backdrop-filter:blur(5px); padding:22px;
+    }
+    .install-nudge.show{display:grid}
+    .install-box{
+      width:min(92vw,430px); background:var(--paper); border:2px solid var(--ink);
+      border-radius:28px; padding:26px; box-shadow:7px 8px 0 var(--ink);
+      text-align:center;
+    }
+    .install-box h2{margin:0 0 10px; font-size:30px; letter-spacing:-.04em}
+    .install-box p{font-size:17px; line-height:1.45; color:var(--muted); margin:8px 0 18px}
+    .install-box button{width:100%; margin-top:10px}
+    .install-help{display:none; margin-top:18px; border-top:1px solid var(--line); padding-top:16px}
+    .install-help.show{display:block}
+    .install-steps{font-size:18px!important; color:var(--ink)!important; line-height:1.6!important}
+    .appish-note{display:none; margin:16px auto 0; width:max-content; max-width:90%;
+      padding:10px 18px; border:1.5px solid var(--green); border-radius:999px;
+      color:var(--green); font-weight:900; letter-spacing:.02em}
+    .appish-note.show{display:block}
+
     .cycle-flourish{
       position:fixed;
       inset:0;
@@ -426,6 +448,14 @@
       .big-button{box-shadow:5px 6px 0 var(--ink)}
     }
   </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="money-ish-icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="money-ish-icon-180.png">
+  <meta name="theme-color" content="#F6F2E8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Money-ish">
 </head>
 <body>
   <main class="wrap">
@@ -485,6 +515,23 @@
     </footer>
   </main>
 
+
+
+  <div class="install-nudge" id="installNudge" aria-hidden="true">
+    <div class="install-box">
+      <h2>KEEP ME-ISH?</h2>
+      <p>Money-ish works rather nicely from your Home Screen.<br>No download. No account. Still free.</p>
+      <button class="primary" id="showInstallHelp">SHOW ME HOW →</button>
+      <button class="secondary" id="dismissInstall">NAH, I'M FINE →</button>
+      <div class="install-help" id="installHelp">
+        <p class="install-steps"><strong>MAKE ME AN APP-ISH</strong><br>
+        Tap <strong>Share ↑</strong><br>
+        then <strong>Add to Home Screen</strong><br>
+        then <strong>Add</strong>.<br><br>That's genuinely it.</p>
+        <button class="primary" id="gotInstall">GOT IT ✓</button>
+      </div>
+    </div>
+  </div>
 
   <div class="cycle-flourish" id="cycleFlourish" aria-hidden="true">
     <div class="cycle-badge">CLARITY CYCLED ✓</div>
@@ -761,6 +808,7 @@ doneBtn.addEventListener("click", () => {
   const wasNew = !done.has(currentPrompt.id);
   done.add(currentPrompt.id);
   save();
+  maybeShowInstallNudge();
 
   doneBtn.textContent = "CLARITY CYCLED ✓";
   doneBtn.disabled = true;
@@ -792,7 +840,7 @@ doneBtn.addEventListener("click", () => {
     if (shouldReflect) {
       setTimeout(showReflection, 300);
     }
-  }, 980);
+  }, 1980);
 });
 
 document.getElementById("aboutBtn").addEventListener("click", () => dialog.showModal());
@@ -839,6 +887,37 @@ document.getElementById("saveReflection").addEventListener("click", () => {
 document.getElementById("skipReflection").addEventListener("click", closeReflection);
 
 updateStatus();
+
+
+const installNudge = document.getElementById("installNudge");
+const installHelp = document.getElementById("installHelp");
+const showInstallHelp = document.getElementById("showInstallHelp");
+const dismissInstall = document.getElementById("dismissInstall");
+const gotInstall = document.getElementById("gotInstall");
+const appishNote = document.getElementById("appishNote");
+
+const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+if (isStandalone && appishNote) appishNote.classList.add("show");
+
+function maybeShowInstallNudge(){
+  if (isStandalone || localStorage.getItem("moneyish-install-dismissed") === "1") return;
+  const seenCount = seen.size;
+  const doneCount = done.size;
+  if (doneCount >= 1 || seenCount >= 3) {
+    setTimeout(() => installNudge.classList.add("show"), 650);
+  }
+}
+showInstallHelp?.addEventListener("click", () => installHelp.classList.add("show"));
+dismissInstall?.addEventListener("click", () => {
+  localStorage.setItem("moneyish-install-dismissed","1");
+  installNudge.classList.remove("show");
+});
+gotInstall?.addEventListener("click", () => {
+  localStorage.setItem("moneyish-install-dismissed","1");
+  installNudge.classList.remove("show");
+});
+
 </script>
+  <div class="appish-note" id="appishNote">YOU’RE APP-ISH ✓</div>
 </body>
 </html>
